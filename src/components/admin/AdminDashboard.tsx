@@ -846,102 +846,105 @@ export default function AdminDashboard() {
               </div>
             </div>
 
+            {/* Horizontal Scroll wrapper added to Tuition Fee ledger and constraints applied */}
             <div className="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-              <table className="w-full text-left border-collapse text-xs text-slate-500">
-                <thead className="bg-slate-50 border-b border-slate-200 text-[10px] uppercase font-mono text-slate-400 font-bold">
-                  <tr>
-                    <th className="py-3 px-4">Student</th>
-                    <th className="py-3 px-4">Class</th>
-                    <th className="py-3 px-4 text-right">Tuition Fee</th>
-                    <th className="py-3 px-4 text-right text-emerald-700">Paid to Date</th>
-                    <th className="py-3 px-4 text-right text-red-600">Pending Payable</th>
-                    <th className="py-3 px-4 text-center">Status</th>
-                    <th className="py-3 px-4 text-right">Transactions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 bg-white text-slate-700">
-                  {students
-                    .filter(s => {
-                      const matchesSearch = s.name.toLowerCase().includes(feeSearch.toLowerCase()) || 
-                                            s.username.toLowerCase().includes(feeSearch.toLowerCase());
-                      const matchesGrade = feeGradeFilter === 'ALL' || s.classGrade === feeGradeFilter;
-                      return matchesSearch && matchesGrade;
-                    })
-                    .map(s => {
-                      const isPaying = payingStudentId === s.id;
-                      return (
-                        <tr key={s.id} className="hover:bg-slate-50/50 transition-colors">
-                          <td className="py-3.5 px-4 font-bold text-slate-800">
-                            <div>
-                              <span>{s.name}</span>
-                              <span className="block text-[10px] text-slate-400 font-mono font-normal mt-0.5">Login ID: {s.username}</span>
-                            </div>
-                          </td>
-                          <td className="py-3.5 px-4 font-semibold text-slate-600 font-sans">{s.classGrade}</td>
-                          <td className="py-3.5 px-4 text-right font-mono text-slate-600">₹{s.totalFee || 15000}</td>
-                          <td className="py-3.5 px-4 text-right font-mono text-emerald-600 font-semibold">₹{s.paidFee || 0}</td>
-                          <td className="py-3.5 px-4 text-right font-mono font-semibold">
-                            <span className={s.pendingFee > 0 ? "text-red-650 font-semibold" : "text-emerald-700 font-semibold"}>
-                              ₹{s.pendingFee || 0}
-                            </span>
-                          </td>
-                          <td className="py-3.5 px-4 text-center">
-                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold font-mono tracking-wide ${
-                              s.paymentStatus === 'PAID' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' :
-                              s.paymentStatus === 'PARTIAL' ? 'bg-amber-50 text-amber-700 border border-amber-100' :
-                              'bg-red-50 text-red-700 border border-red-100'
-                            }`}>
-                              {s.paymentStatus || 'PENDING'}
-                            </span>
-                          </td>
-                          <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                            {isPaying ? (
-                              <div className="flex items-center gap-1.5 justify-end font-sans">
-                                <input
-                                  type="number"
-                                  autoFocus
-                                  placeholder="Amount (₹)"
-                                  value={payAmountInput}
-                                  onChange={e => setPayAmountInput(e.target.value)}
-                                  className="border border-slate-300 rounded font-mono text-xs w-24 px-2 py-1 focus:outline-blue-500 bg-white"
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() => handleRecordPaymentSubmit(s.id)}
-                                  className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold rounded-lg cursor-pointer"
-                                >
-                                  Save
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => setPayingStudentId(null)}
-                                  className="text-[11px] text-slate-400 font-semibold bg-slate-100 hover:bg-slate-200 px-1 py-1 rounded"
-                                >
-                                  Cancel
-                                </button>
+              <div className="overflow-x-auto w-full">
+                <table className="min-w-[850px] w-full text-left border-collapse text-xs text-slate-500">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-[10px] uppercase font-mono text-slate-400 font-bold">
+                    <tr>
+                      <th className="py-3 px-4">Student</th>
+                      <th className="py-3 px-4">Class</th>
+                      <th className="py-3 px-4 text-right">Tuition Fee</th>
+                      <th className="py-3 px-4 text-right text-emerald-700">Paid to Date</th>
+                      <th className="py-3 px-4 text-right text-red-600">Pending Payable</th>
+                      <th className="py-3 px-4 text-center">Status</th>
+                      <th className="py-3 px-4 text-right">Transactions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 bg-white text-slate-700">
+                    {students
+                      .filter(s => {
+                        const matchesSearch = s.name.toLowerCase().includes(feeSearch.toLowerCase()) || 
+                                              s.username.toLowerCase().includes(feeSearch.toLowerCase());
+                        const matchesGrade = feeGradeFilter === 'ALL' || s.classGrade === feeGradeFilter;
+                        return matchesSearch && matchesGrade;
+                      })
+                      .map(s => {
+                        const isPaying = payingStudentId === s.id;
+                        return (
+                          <tr key={s.id} className="hover:bg-slate-50/50 transition-colors">
+                            <td className="py-3.5 px-4 font-bold text-slate-800">
+                              <div>
+                                <span>{s.name}</span>
+                                <span className="block text-[10px] text-slate-400 font-mono font-normal mt-0.5">Login ID: {s.username}</span>
                               </div>
-                            ) : (
-                              s.pendingFee > 0 ? (
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setPayingStudentId(s.id);
-                                    setPayAmountInput(s.pendingFee.toString());
-                                  }}
-                                  className="px-3 py-1 bg-blue-50 hover:bg-blue-100 font-extrabold text-blue-700 rounded-lg text-[11px] cursor-pointer"
-                                >
-                                  Collect Fees
-                                </button>
+                            </td>
+                            <td className="py-3.5 px-4 font-semibold text-slate-600 font-sans">{s.classGrade}</td>
+                            <td className="py-3.5 px-4 text-right font-mono text-slate-600">₹{s.totalFee || 15000}</td>
+                            <td className="py-3.5 px-4 text-right font-mono text-emerald-600 font-semibold">₹{s.paidFee || 0}</td>
+                            <td className="py-3.5 px-4 text-right font-mono font-semibold">
+                              <span className={s.pendingFee > 0 ? "text-red-650 font-semibold" : "text-emerald-700 font-semibold"}>
+                                ₹{s.pendingFee || 0}
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-4 text-center">
+                              <span className={`px-2 py-0.5 rounded text-[10px] font-bold font-mono tracking-wide ${
+                                s.paymentStatus === 'PAID' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' :
+                                s.paymentStatus === 'PARTIAL' ? 'bg-amber-50 text-amber-700 border border-amber-100' :
+                                'bg-red-50 text-red-700 border border-red-100'
+                              }`}>
+                                {s.paymentStatus || 'PENDING'}
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                              {isPaying ? (
+                                <div className="flex items-center gap-1.5 justify-end font-sans">
+                                  <input
+                                    type="number"
+                                    autoFocus
+                                    placeholder="Amount (₹)"
+                                    value={payAmountInput}
+                                    onChange={e => setPayAmountInput(e.target.value)}
+                                    className="border border-slate-300 rounded font-mono text-xs w-24 px-2 py-1 focus:outline-blue-500 bg-white"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRecordPaymentSubmit(s.id)}
+                                    className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold rounded-lg cursor-pointer"
+                                  >
+                                    Save
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setPayingStudentId(null)}
+                                    className="text-[11px] text-slate-400 font-semibold bg-slate-100 hover:bg-slate-200 px-1 py-1 rounded"
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
                               ) : (
-                                <span className="text-[11px] text-emerald-600 font-medium italic">Fully Settled</span>
-                              )
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
+                                s.pendingFee > 0 ? (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setPayingStudentId(s.id);
+                                      setPayAmountInput(s.pendingFee.toString());
+                                    }}
+                                    className="px-3 py-1 bg-blue-50 hover:bg-blue-100 font-extrabold text-blue-700 rounded-lg text-[11px] cursor-pointer"
+                                  >
+                                    Collect Fees
+                                  </button>
+                                ) : (
+                                  <span className="text-[11px] text-emerald-600 font-medium italic">Fully Settled</span>
+                                )
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>{/* end overflow-x-auto */}
             </div>
           </div>
         )}
@@ -1366,10 +1369,11 @@ export default function AdminDashboard() {
               </div>
             </div>
 
+            {/* Scrollable body — Added horizontal scroll wrapper container */}
             <div className="p-3 sm:p-5 overflow-y-auto flex-1 bg-white">
               <div className="border border-slate-200 rounded-xl overflow-hidden">
                 <div className="overflow-x-auto w-full">
-                  <table className="min-w-[600px] w-full text-xs text-left text-slate-500 border-collapse">
+                  <table className="min-w-[650px] w-full text-xs text-left text-slate-500 border-collapse">
                     <thead className="text-[10px] text-slate-400 uppercase bg-slate-50 border-b border-slate-200 font-mono font-bold">
                       <tr>
                         <th className="py-2.5 px-3">Faculty Name</th>
@@ -1448,9 +1452,10 @@ export default function AdminDashboard() {
                       }
                     </tbody>
                   </table>
-                </div>
+                </div>{/* end overflow-x-auto */}
               </div>
             </div>
+
           </div>
         </div>
       )}
