@@ -1,0 +1,6 @@
+{
+  "name": "School Management Portal",
+  "description": "Multi-role academic platform for Classes 9th-12th. Features secure custom credentials, linked Parent-Student profiles, encrypted homework submissions, and dedicated dashboards for Admins, Teachers, Students, and Parents.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
